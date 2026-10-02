@@ -1,0 +1,507 @@
+/* =========================================================
+   KIRAN ACADEMY - JAVASCRIPT
+   ========================================================= */
+
+
+/* ================= MOBILE MENU ================= */
+
+function toggleMenu() {
+
+    const nav = document.getElementById("navMenu");
+
+    nav.classList.toggle("mobile-open");
+
+}
+
+
+/* ================= MODALS ================= */
+
+function openLogin() {
+
+    document.getElementById("loginModal").classList.add("active");
+
+}
+
+function openRegister() {
+
+    document.getElementById("registerModal").classList.add("active");
+
+}
+
+function openDemo() {
+
+    document.getElementById("demoModal").classList.add("active");
+
+}
+
+function closeModal(id) {
+
+    document.getElementById(id).classList.remove("active");
+
+}
+
+
+/* ================= SWITCH LOGIN / REGISTER ================= */
+
+function switchToRegister() {
+
+    closeModal("loginModal");
+
+    setTimeout(() => {
+        openRegister();
+    }, 150);
+
+}
+
+function switchToLogin() {
+
+    closeModal("registerModal");
+
+    setTimeout(() => {
+        openLogin();
+    }, 150);
+
+}
+
+
+/* ================= CLOSE MODAL OUTSIDE ================= */
+
+document.querySelectorAll(".modal").forEach(modal => {
+
+    modal.addEventListener("click", function(event) {
+
+        if (event.target === modal) {
+
+            modal.classList.remove("active");
+
+        }
+
+    });
+
+});
+
+
+/* ================= ESC KEY ================= */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        document.querySelectorAll(".modal").forEach(modal => {
+            modal.classList.remove("active");
+        });
+
+    }
+
+});
+
+
+/* ================= PHONE VALIDATION ================= */
+
+function isValidPhone(phone) {
+
+    return /^[0-9]{10}$/.test(phone);
+
+}
+
+
+/* ================= EMAIL VALIDATION ================= */
+
+function isValidEmail(email) {
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+}
+
+
+/* ================= TOAST ================= */
+
+function showToast(message) {
+
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 3000);
+
+}
+
+
+/* ================= REGISTER ================= */
+
+document.getElementById("registerForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const name =
+            document.getElementById("registerName").value.trim();
+
+        const email =
+            document.getElementById("registerEmail").value.trim();
+
+        const phone =
+            document.getElementById("registerPhone").value.trim();
+
+        const password =
+            document.getElementById("registerPassword").value;
+
+        const terms =
+            document.getElementById("terms").checked;
+
+
+        if (name.length < 2) {
+
+            showToast("Please enter your full name.");
+
+            return;
+
+        }
+
+
+        if (!isValidEmail(email)) {
+
+            showToast("Please enter a valid email address.");
+
+            return;
+
+        }
+
+
+        if (!isValidPhone(phone)) {
+
+            showToast("Mobile number must contain exactly 10 digits.");
+
+            return;
+
+        }
+
+
+        if (password.length < 6) {
+
+            showToast("Password must contain at least 6 characters.");
+
+            return;
+
+        }
+
+
+        if (!terms) {
+
+            showToast("Please accept the terms and conditions.");
+
+            return;
+
+        }
+
+
+        /*
+            Front-end demo only.
+
+            A real website would send this information
+            to a backend/server/database.
+        */
+
+        localStorage.setItem(
+            "kiranUser",
+            JSON.stringify({
+                name: name,
+                email: email,
+                phone: phone
+            })
+        );
+
+
+        closeModal("registerModal");
+
+        showToast(
+            "Registration successful! Welcome to Kiran Academy."
+        );
+
+        this.reset();
+
+    }
+);
+
+
+/* ================= LOGIN ================= */
+
+document.getElementById("loginForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const email =
+            document.getElementById("loginEmail").value.trim();
+
+        const password =
+            document.getElementById("loginPassword").value;
+
+
+        if (!isValidEmail(email)) {
+
+            showToast("Please enter a valid email address.");
+
+            return;
+
+        }
+
+
+        if (password.length < 6) {
+
+            showToast("Password must contain at least 6 characters.");
+
+            return;
+
+        }
+
+
+        const savedUser =
+            JSON.parse(localStorage.getItem("kiranUser"));
+
+
+        if (savedUser && savedUser.email === email) {
+
+            closeModal("loginModal");
+
+            showToast(
+                "Login successful. Welcome back!"
+            );
+
+        } else {
+
+            showToast(
+                "Demo login completed. Backend authentication is not connected yet."
+            );
+
+        }
+
+    }
+);
+
+
+/* ================= DEMO FORM ================= */
+
+document.getElementById("demoForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const name =
+            document.getElementById("demoName").value.trim();
+
+        const email =
+            document.getElementById("demoEmail").value.trim();
+
+        const phone =
+            document.getElementById("demoPhone").value.trim();
+
+        const course =
+            document.getElementById("demoCourse").value;
+
+
+        if (name.length < 2) {
+
+            showToast("Please enter your name.");
+
+            return;
+
+        }
+
+
+        if (!isValidEmail(email)) {
+
+            showToast("Please enter a valid email.");
+
+            return;
+
+        }
+
+
+        if (!isValidPhone(phone)) {
+
+            showToast("Enter exactly 10 digits for mobile number.");
+
+            return;
+
+        }
+
+
+        if (!course) {
+
+            showToast("Please select a course.");
+
+            return;
+
+        }
+
+
+        closeModal("demoModal");
+
+        showToast(
+            `Free demo request received for ${course}.`
+        );
+
+        this.reset();
+
+    }
+);
+
+
+/* ================= CONTACT FORM ================= */
+
+document.getElementById("contactForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        const name =
+            document.getElementById("contactName").value.trim();
+
+        const email =
+            document.getElementById("contactEmail").value.trim();
+
+        const phone =
+            document.getElementById("contactPhone").value.trim();
+
+
+        if (name.length < 2) {
+
+            showToast("Please enter your name.");
+
+            return;
+
+        }
+
+
+        if (!isValidEmail(email)) {
+
+            showToast("Please enter a valid email.");
+
+            return;
+
+        }
+
+
+        if (!isValidPhone(phone)) {
+
+            showToast("Mobile number must contain exactly 10 digits.");
+
+            return;
+
+        }
+
+
+        showToast(
+            "Thank you! Your enquiry has been submitted."
+        );
+
+        this.reset();
+
+    }
+);
+
+
+/* ================= COURSE BUTTON ================= */
+
+function courseMessage(course) {
+
+    showToast(
+        `${course} selected. Course details can be connected here.`
+    );
+
+}
+
+
+/* ================= PHONE INPUT RESTRICTION ================= */
+
+document.querySelectorAll('input[type="tel"]').forEach(input => {
+
+    input.addEventListener("input", function() {
+
+        this.value = this.value.replace(/\D/g, "");
+
+        if (this.value.length > 10) {
+
+            this.value = this.value.slice(0, 10);
+
+        }
+
+    });
+
+});
+
+
+/* ================= NAV LINK CLOSE ON MOBILE ================= */
+
+document.querySelectorAll("#navMenu a").forEach(link => {
+
+    link.addEventListener("click", function() {
+
+        document
+            .getElementById("navMenu")
+            .classList.remove("mobile-open");
+
+    });
+
+});
+
+
+/* ================= SCROLL ANIMATION ================= */
+
+const observer = new IntersectionObserver(
+    entries => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+                entry.target.style.opacity = "1";
+
+                entry.target.style.transform =
+                    "translateY(0)";
+
+            }
+
+        });
+
+    },
+    {
+        threshold: 0.12
+    }
+);
+
+
+document
+    .querySelectorAll(
+        ".course-card, .placement-card, .branch-card, .feature, .tech-grid div"
+    )
+    .forEach(element => {
+
+        element.style.opacity = "0";
+
+        element.style.transform = "translateY(25px)";
+
+        element.style.transition =
+            "opacity .6s ease, transform .6s ease";
+
+        observer.observe(element);
+
+    });
+
+
+/* ================= PAGE LOADED ================= */
+
+console.log(
+    "Kiran Academy website loaded successfully."
+);
